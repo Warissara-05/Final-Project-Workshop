@@ -4,6 +4,7 @@ val logback_version: String by project
 plugins {
     kotlin("jvm") version "2.1.10"
     id("io.ktor.plugin") version "3.2.1"
+    id("org.jetbrains.kotlin.plugin.serialization") version "1.9.23" // Must match Kotlin version
 }
 
 group = "com.example"
@@ -36,4 +37,7 @@ dependencies {
     implementation("org.postgresql:postgresql:42.3.1")
     testImplementation("io.ktor:ktor-server-tests:2.1.0")
     testImplementation("org.jetbrains.kotlin:kotlin-test:1.9.23")
+
+    implementation("io.ktor:ktor-server-call-logging:2.3.9")
+    implementation("ch.qos.logback:logback-classic:1.4.11")
 }

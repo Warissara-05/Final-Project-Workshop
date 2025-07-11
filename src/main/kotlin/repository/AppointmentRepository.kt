@@ -1,21 +1,36 @@
 package com.example.repository
 
 import com.example.model.Appointment
+import com.example.model.AppointmentInput
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
 object AppointmentRepository {
-    private val appointments = mutableListOf<Appointment>()
-    private val formatter = DateTimeFormatter.ISO_DATE_TIME
+    val appointments = mutableListOf<Appointment>()
+    var nextId = 1
+    val formatter = DateTimeFormatter.ISO_DATE_TIME
 
-    fun getAll(): List<Appointment> = appointments.toList()
+    /** คืน true ถ้าจองได้, false ถ้าเวลา/บริการซ้ำ */
+    fun addIfAvailable(input: AppointmentInput): Boolean {
+        val newTime = LocalDateTime.parse(input.appointmentTime, formatter)
 
-    fun addIfAvailable(new: Appointment): Boolean {
-        val newTime = LocalDateTime.parse(new.appointmentTime, formatter)
         val conflict = appointments.any {
             LocalDateTime.parse(it.appointmentTime, formatter) == newTime &&
-                    it.serviceId == new.serviceId
+                    it.serviceId == input.serviceId
         }
-        return if (conflict) false else appointments.add(new)
+
+        if (conflict) return false
+
+        val newAppointment = Appointment(
+            id = nextId++,
+            clientName = input.clientName,
+            clientEmail = input.clientEmail,
+            appointmentTime = input.appointmentTime,
+            serviceId = input.serviceId
+        )
+        appointments.add(newAppointment)
+        return true
     }
+
+    fun getAll(): List<Appointment> = appointments.toList()
 }
