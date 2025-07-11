@@ -10,7 +10,7 @@ import com.example.repository.*
 
 fun Application.configureRouting() {
     routing {
-        route("/services") {
+        route("/service") {
             get {
                 call.respond(ServiceRepository.getAll())
             }
@@ -24,7 +24,7 @@ fun Application.configureRouting() {
             }
         }
 
-        route("/appointments") {
+        route("/appointment") {
             get {
                 call.respond(AppointmentRepository.getAll())
             }
@@ -37,5 +37,17 @@ fun Application.configureRouting() {
                     call.respond(HttpStatusCode.Conflict, "Time already booked")
             }
         }
+     /*   post {
+            try {
+                val appointment = call.receive<Appointment>()
+                val success = AppointmentRepository.addIfAvailable(appointment)
+                if (success)
+                    call.respond(HttpStatusCode.Created, appointment)
+                else
+                    call.respond(HttpStatusCode.Conflict, "Time already booked")
+            } catch (e: Exception) {
+                call.respond(HttpStatusCode.BadRequest, "Invalid request: ${e.message}")
+            }
+        }*/
     }
 }
