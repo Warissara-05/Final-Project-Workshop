@@ -31,9 +31,37 @@ fun Application.configureRouting() = routing {
         post {
             val input = call.receive<AppointmentInput>()
             if (AppointmentRepository.addIfAvailable(input))
-                call.respond(HttpStatusCode.Created)
+                call.respond(HttpStatusCode.Created,"Appointment completed")
             else
                 call.respond(HttpStatusCode.Conflict, "Time already booked")
         }
+    }
+
+    get("{id}") {
+        val id = call.parameters["id"]?.toIntOrNull()
+        if (id == null) {
+            call.respond(HttpStatusCode.BadRequest, "Invalid ID")
+            return@get
+        }
+
+        val appt = AppointmentRepository.getById(id)
+        if (appt == null)
+            call.respond(HttpStatusCode.NotFound, "Appointment not found")
+        else
+            call.respond(appt)
+    }
+
+    delete("{id}") {
+        val id = call.parameters["id"]?.toIntOrNull()
+        if (id == null) {
+            call.respond(HttpStatusCode.BadRequest, "Invalid ID")
+            return@delete
+        }
+
+        val removed = AppointmentRepository.deleteById(id)
+        if (removed)
+            call.respond(HttpStatusCode.OK, "Deleted appointment")
+        else
+            call.respond(HttpStatusCode.NotFound, "Appointment not found")
     }
 }

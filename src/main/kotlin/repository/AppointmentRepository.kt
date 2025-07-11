@@ -33,4 +33,13 @@ object AppointmentRepository {
     }
 
     fun getAll(): List<Appointment> = appointments.toList()
+
+    fun getById(id: Int): Appointment? {
+        return appointments.find { it.id == id }
+    }
+
+    fun deleteById(id: Int): Boolean {
+        return appointments.removeIf { it.id == id }
+    }
+
 }

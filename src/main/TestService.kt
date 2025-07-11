@@ -11,7 +11,7 @@ class TestService {
         val service = Service(
             id = 1,
             name = "Haircut",
-            description = "Simple  cut",
+            description = "Simple cut",
             defaultDurationInMinutes = 30
         )
 
